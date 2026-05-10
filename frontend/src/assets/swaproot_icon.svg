@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img">
+  <title>Swaproot app icon</title>
+  <desc>Swaproot app icon — circular loop with leaf sprout on forest green background</desc>
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M2 1.5L8 5L2 8.5" fill="none" stroke="context-stroke" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+    <clipPath id="round">
+      <rect width="200" height="200" rx="44"/>
+    </clipPath>
+  </defs>
+
+  <!-- Background -->
+  <rect width="200" height="200" rx="44" fill="#0A5C36"/>
+
+  <!-- Orbit ring -->
+  <circle cx="100" cy="108" r="58" fill="none" stroke="#5DCAA5" stroke-width="4.5" stroke-dasharray="314 52" stroke-linecap="round" stroke-dashoffset="-10"/>
+  <!-- Arrow tip -->
+  <path d="M149 70 L160 80 L147 84" fill="none" stroke="#5DCAA5" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Swap arrow top -->
+  <path d="M58 98 Q100 74 142 98" fill="none" stroke="#F7F5F0" stroke-width="3.8" stroke-linecap="round" marker-end="url(#arr)"/>
+  <!-- Swap arrow bottom -->
+  <path d="M142 118 Q100 142 58 118" fill="none" stroke="#F7F5F0" stroke-width="3.8" stroke-linecap="round" marker-end="url(#arr)"/>
+  <!-- Leaf circle -->
+  <circle cx="100" cy="50" r="16" fill="#1D9E75"/>
+  <!-- Leaf left -->
+  <path d="M100 64 Q82 54 80 40 Q96 38 100 54" fill="#5DCAA5"/>
+  <!-- Leaf right -->
+  <path d="M100 60 Q118 50 120 36 Q104 34 100 50" fill="#1D9E75" opacity="0.75"/>
+  <!-- Stem -->
+  <path d="M100 66 L100 50" stroke="#0A5C36" stroke-width="3" stroke-linecap="round"/>
+</svg>
