@@ -161,7 +161,9 @@ const AuthScreen = () => {
 
   return (
     <div className="screen active" id="screen-auth" role="main" aria-label="Authentication Screen" style={{minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
-      <div className="auth-logo" aria-label="Traloop Logo" style={{textAlign: 'center'}}>Tra<span>loop</span></div>
+      <div className="auth-logo" aria-label="Switcharoo Logo" style={{textAlign: 'center', fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: 32, letterSpacing: -1, color: '#fff' }}>
+        Switch<span style={{ color: 'var(--accent)' }}>aroo</span>
+      </div>
       <div className="auth-tag" style={{textAlign: 'center'}}>Trade smart. Live green.</div>
       <div className="auth-card" role="form" aria-labelledby="auth-form-title" style={{margin: '0 auto'}}>
         <button className="btn btn--primary" style={{marginBottom: 16}} onClick={handleGoogleSignIn} aria-label="Sign in with Google" disabled={loading}>
