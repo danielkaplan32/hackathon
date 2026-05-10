@@ -1,4 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 // sectionTitle: string (e.g. 'My Items' or 'My Wishlist')
 export default function Items({ items, onAddItem, onUpdateItem, onDeleteItem, sectionTitle = 'My Items' }) {
@@ -78,47 +80,58 @@ export default function Items({ items, onAddItem, onUpdateItem, onDeleteItem, se
                   <img
                     src={item.photos[0]}
                     alt="item"
-                    style={{ width: 56, height: 56, objectFit: 'cover', borderRadius: 10, marginRight: 12, cursor: 'pointer', border: '1px solid var(--border)' }}
+                    style={{ width: 96, height: 96, objectFit: 'cover', borderRadius: 12, marginRight: 18, cursor: 'pointer', border: '1px solid var(--border)', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}
                     onClick={() => setGalleryPhotos(item.photos)}
                   />
                 )}
-                <span style={{ flex: 1, minWidth: 0, fontSize: 17, fontWeight: 500 }}>{item.title}</span>
+                <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 4 }}>
+                  <span style={{ fontSize: 17, fontWeight: 600, color: 'var(--text)' }}>{item.title}</span>
+                  {typeof item.value !== 'undefined' && item.value !== null && (
+                    <span style={{ fontSize: 15, fontWeight: 500, color: 'var(--accent)', marginTop: 2 }}>
+                      ${item.value}
+                    </span>
+                  )}
+                </div>
                 <button
                   className="edit-btn"
                   style={{
-                    background: '#00e676', // green
-                    color: '#fff',
+                    background: 'none',
                     border: 'none',
                     borderRadius: 8,
-                    padding: '7px 18px',
-                    marginRight: 8,
+                    padding: 6,
+                    marginRight: 4,
                     cursor: 'pointer',
-                    fontWeight: 700,
-                    fontSize: 15,
-                    boxShadow: '0 1px 4px rgba(0,0,0,0.07)',
+                    color: 'var(--accent)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: 22,
                     transition: 'background .15s',
                   }}
                   onClick={() => onUpdateItem(item)}
+                  title="Edit"
                 >
-                  Edit
+                  <EditIcon style={{ fontSize: 22 }} />
                 </button>
                 <button
                   className="delete-btn"
                   style={{
-                    background: 'var(--danger)',
-                    color: '#fff',
+                    background: 'none',
                     border: 'none',
                     borderRadius: 8,
-                    padding: '7px 18px',
+                    padding: 6,
                     cursor: 'pointer',
-                    fontWeight: 700,
-                    fontSize: 15,
-                    boxShadow: '0 1px 4px rgba(0,0,0,0.07)',
+                    color: 'var(--danger)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: 22,
                     transition: 'background .15s',
                   }}
                   onClick={() => onDeleteItem(item.id)}
+                  title="Delete"
                 >
-                  Delete
+                  <DeleteIcon style={{ fontSize: 22 }} />
                 </button>
               </div>
             ))

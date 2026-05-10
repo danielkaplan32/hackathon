@@ -57,11 +57,70 @@ export default function Requests() {
       else alert('Failed to delete trade: ' + error.message);
     }
     if (deleted) return null;
+    // Calculate total values for requested and offered items
+    const requestedValue = (trade.item_ids||[]).reduce((sum, id) => {
+      const item = itemMap[id];
+      return sum + (item && typeof item.value === 'number' ? item.value : 0);
+    }, 0);
+    const offeredValue = (trade.offered_item_ids||[]).reduce((sum, id) => {
+      const item = itemMap[id];
+      return sum + (item && typeof item.value === 'number' ? item.value : 0);
+    }, 0) + (trade.cash_amount || 0);
+    // For outgoing, reverse the diff so positive means you gain value
+    const valueDiff = isIncoming ? (offeredValue - requestedValue) : (requestedValue - offeredValue);
+    // For incoming trades, show a slider/gradient between Requested and Offered
     return (
       <div style={{ marginBottom: 18, opacity: accepted ? 0.5 : 1, pointerEvents: accepted ? 'none' : 'auto' }}>
         {/* Date/time above card, right-aligned */}
         <div style={{ textAlign: 'right', fontSize: 13, color: 'var(--muted)', marginBottom: 2 }}>
           {new Date(trade.created_at).toLocaleString()}
+        </div>
+        {/* Value difference band above Requested/Offered */}
+        <div style={{
+          width: '100%',
+          margin: '0 0 10px 0',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          flexDirection: 'column',
+        }}>
+          <div style={{
+            width: '96%',
+            height: 8,
+            borderRadius: 4,
+            background: `linear-gradient(90deg, #ff5c72 0%, #ffe066 50%, #00e676 100%)`,
+            position: 'relative',
+            marginBottom: 0,
+            boxShadow: '0 1px 4px rgba(0,0,0,0.07)'
+          }}>
+            {/* Slider thumb */}
+            <div style={{
+              position: 'absolute',
+              left: `calc(${Math.max(0, Math.min(1, (valueDiff + 50) / 100)) * 100}% - 0.5em)`,
+              top: '-10px',
+              minWidth: 38,
+              height: 28,
+              padding: '0 10px',
+              borderRadius: 14,
+              background: valueDiff > 0 ? '#00e676' : valueDiff < 0 ? '#ff5c72' : '#ffe066',
+              border: '2px solid #fff',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.10)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontWeight: 800,
+              fontSize: 16,
+              color: '#fff',
+              zIndex: 2,
+              transition: 'left 0.2s',
+              whiteSpace: 'nowrap',
+            }}>
+              {valueDiff > 0 ? '+' : valueDiff < 0 ? '-' : ''}${Math.abs(valueDiff)}
+            </div>
+          </div>
+          <div style={{ fontSize: 14, color: valueDiff > 0 ? '#00e676' : valueDiff < 0 ? '#ff5c72' : '#ffe066', fontWeight: 700, marginTop: 4 }}>
+            {valueDiff > 0 ? 'You gain value' : valueDiff < 0 ? 'You lose value' : 'Even trade'}
+          </div>
         </div>
         <div
           style={{
@@ -94,14 +153,19 @@ export default function Requests() {
                     ) : (
                       <div style={{ width: 48, height: 48, background: '#eee', borderRadius: 8, marginBottom: 4, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#aaa', fontSize: 18 }}>?</div>
                     )}
-                    <div style={{ fontSize: 13, fontWeight: 600, textAlign: 'center', maxWidth: 70, wordBreak: 'break-word' }}>{item.title}</div>
+                    <div style={{ position: 'relative', width: '100%', minHeight: 18 }}>
+                      <span style={{ fontSize: 13, fontWeight: 600, textAlign: 'center', maxWidth: 70, wordBreak: 'break-word', display: 'block' }}>{item.title}</span>
+                      {typeof item.value !== 'undefined' && item.value !== null && (
+                        <span style={{ position: 'absolute', right: 0, bottom: 0, fontSize: 12, color: 'var(--accent)', fontWeight: 700 }}>${item.value}</span>
+                      )}
+                    </div>
                   </div>
                 ) : null;
               })}
             </div>
           </div>
           {/* Trade arrow */}
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: 40 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: 60, minHeight: 70, justifyContent: 'center' }}>
             <span style={{ fontSize: 28, color: 'var(--accent)', marginBottom: 4 }}>⇄</span>
           </div>
           {/* Offered items (right) */}
@@ -135,7 +199,12 @@ export default function Requests() {
                     ) : (
                       <div style={{ width: 48, height: 48, background: '#eee', borderRadius: 8, marginBottom: 4, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#aaa', fontSize: 18 }}>?</div>
                     )}
-                    <div style={{ fontSize: 13, fontWeight: 600, textAlign: 'center', maxWidth: 70, wordBreak: 'break-word' }}>{item.title}</div>
+                    <div style={{ position: 'relative', width: '100%', minHeight: 18 }}>
+                      <span style={{ fontSize: 13, fontWeight: 600, textAlign: 'center', maxWidth: 70, wordBreak: 'break-word', display: 'block' }}>{item.title}</span>
+                      {typeof item.value !== 'undefined' && item.value !== null && (
+                        <span style={{ position: 'absolute', right: 0, bottom: 0, fontSize: 12, color: 'var(--accent)', fontWeight: 700 }}>${item.value}</span>
+                      )}
+                    </div>
                   </div>
                 ) : null;
               })}

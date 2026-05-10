@@ -94,8 +94,15 @@ export default function Counter() {
             ) : (
               <div style={{ width: 180, height: 180, background: '#eee', borderRadius: 12, marginBottom: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#aaa', fontSize: 40 }}>?</div>
             )}
-            <div style={{ fontWeight: 800, fontSize: 22, marginBottom: 4 }}>{myMainItem.title}</div>
-            <div style={{ color: 'var(--muted)', fontSize: 15, marginBottom: 4 }}>{myMainItem.category}</div>
+            <div style={{ display: 'flex', alignItems: 'center', fontWeight: 800, fontSize: 22, marginBottom: 4, width: '100%', justifyContent: 'space-between' }}>
+              <span>{myMainItem.title}</span>
+              {typeof myMainItem.value !== 'undefined' && myMainItem.value !== null && (
+                <span style={{ fontWeight: 700, fontSize: 18, color: 'var(--accent)', marginLeft: 8 }}>${myMainItem.value}</span>
+              )}
+            </div>
+            {Array.isArray(myMainItem.category) && myMainItem.category.length > 0 && (
+              <div style={{ color: 'var(--muted)', fontSize: 15, marginBottom: 4 }}>{myMainItem.category.join(', ')}</div>
+            )}
             <div style={{ fontSize: 16, marginBottom: 8 }}>{myMainItem.description}</div>
           </div>
         )}
@@ -135,7 +142,12 @@ export default function Counter() {
                 ) : (
                   <div style={{ width: 60, height: 60, background: '#eee', borderRadius: 8, marginBottom: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#aaa', fontSize: 22 }}>?</div>
                 )}
-                <div style={{ fontWeight: 700, fontSize: 15, textAlign: 'center', wordBreak: 'break-word' }}>{i.title}</div>
+                <div style={{ position: 'relative', width: '100%', minHeight: 18 }}>
+                  <span style={{ fontWeight: 700, fontSize: 15, textAlign: 'center', wordBreak: 'break-word', display: 'block' }}>{i.title}</span>
+                  {typeof i.value !== 'undefined' && i.value !== null && (
+                    <span style={{ position: 'absolute', right: 0, bottom: 0, fontSize: 13, color: 'var(--accent)', fontWeight: 700 }}>${i.value}</span>
+                  )}
+                </div>
               </div>
             );
           })}
@@ -257,7 +269,7 @@ export default function Counter() {
         {/* No main card on right side; just 'Your Other Items' with original trade items highlighted, and cash field if needed */}
         {offerType !== 'cash' && (
           <>
-            <div style={{ fontWeight: 800, fontSize: 19, marginBottom: 12, color: 'var(--accent)' }}>Your Other Items</div>
+            <div style={{ fontWeight: 800, fontSize: 19, marginBottom: 12, color: 'var(--accent)' }}>Their Other Items</div>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16, marginBottom: 18 }}>
               {theirInventory.map(i => {
                 // Highlight items that were in the original trade (selectedTheirItems)
@@ -294,7 +306,12 @@ export default function Counter() {
                     ) : (
                       <div style={{ width: 60, height: 60, background: '#eee', borderRadius: 8, marginBottom: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#aaa', fontSize: 22 }}>?</div>
                     )}
-                    <div style={{ fontWeight: 700, fontSize: 15, textAlign: 'center', wordBreak: 'break-word' }}>{i.title}</div>
+                    <div style={{ position: 'relative', width: '100%', minHeight: 18 }}>
+                      <span style={{ fontWeight: 700, fontSize: 15, textAlign: 'center', wordBreak: 'break-word', display: 'block' }}>{i.title}</span>
+                      {typeof i.value !== 'undefined' && i.value !== null && (
+                        <span style={{ position: 'absolute', right: 0, bottom: 0, fontSize: 13, color: 'var(--accent)', fontWeight: 700 }}>${i.value}</span>
+                      )}
+                    </div>
                   </div>
                 );
               })}

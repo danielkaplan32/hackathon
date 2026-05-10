@@ -49,6 +49,15 @@ export default function Feed() {
   const [modalItem, setModalItem] = useState(null);
   const [modalImgIdx, setModalImgIdx] = useState(0);
 
+  // Set global modal item id for OfferOptions when modalItem changes
+  useEffect(() => {
+    if (modalItem) {
+      window.__modalItemId = modalItem.id;
+    } else {
+      window.__modalItemId = undefined;
+    }
+  }, [modalItem]);
+
   // Close dropdown on outside click
   useEffect(() => {
     function handleClickOutside(event) {
@@ -199,17 +208,39 @@ export default function Feed() {
                   <span role="img" aria-label="avatar" style={{ fontSize: 22 }}>👤</span>
                 )}
                 <span style={{ fontWeight: 700, fontSize: 15 }}>{item.owner?.first_name} {item.owner?.last_name}</span>
-                <span style={{ color: 'var(--muted)', fontSize: 13 }}>{item.owner?.username ? '@' + item.owner.username : ''}</span>
-                {item.owner?.state && <span style={{ marginLeft: 'auto', color: 'var(--muted)', fontSize: 13 }}>{item.owner.state}</span>}
+                {/* Username without @ and muted color */}
+                <span style={{ color: 'var(--muted)', fontSize: 13 }}>{item.owner?.username || ''}</span>
+                {/* Removed state from tile header */}
               </div>
-              {/* Item image */}
-              {Array.isArray(item.photos) && item.photos.length > 0 ? (
-                <img src={item.photos[0]} alt="item" style={{ width: '100%', height: 180, objectFit: 'cover', background: '#eee' }} />
-              ) : (
-                <div style={{ width: '100%', height: 180, background: '#eee', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#aaa', fontSize: 32 }}>No Image</div>
-              )}
+              {/* Item image with price overlay */}
+              <div style={{ position: 'relative', width: '100%', height: 180 }}>
+                {Array.isArray(item.photos) && item.photos.length > 0 ? (
+                  <img src={item.photos[0]} alt="item" style={{ width: '100%', height: 180, objectFit: 'cover', background: '#eee', display: 'block' }} />
+                ) : (
+                  <div style={{ width: '100%', height: 180, background: '#eee', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#aaa', fontSize: 32 }}>No Image</div>
+                )}
+                {typeof item.value !== 'undefined' && item.value !== null && (
+                  <span style={{
+                    position: 'absolute',
+                    right: 12,
+                    bottom: 12,
+                    background: 'var(--accent)',
+                    color: '#fff',
+                    borderRadius: 16,
+                    padding: '6px 16px',
+                    fontWeight: 700,
+                    fontSize: 16,
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.10)',
+                    zIndex: 2,
+                  }}>
+                    ${item.value}
+                  </span>
+                )}
+              </div>
               {/* Item title */}
-              <div style={{ padding: '14px 16px', fontWeight: 700, fontSize: 18 }}>{item.title}</div>
+              <div style={{ padding: '14px 16px', fontWeight: 700, fontSize: 18, display: 'flex', alignItems: 'center', gap: 8 }}>
+                <span style={{ flex: 1 }}>{item.title}</span>
+              </div>
             </div>
           ))}
         </div>
@@ -271,10 +302,12 @@ export default function Feed() {
               {/* Item details */}
               <div style={{ padding: '22px 24px 18px 24px', display: 'flex', flexDirection: 'column', gap: 10 }}>
                 <div style={{ fontWeight: 800, fontSize: 22, color: 'var(--accent)' }}>{modalItem.title}</div>
-                <div style={{ color: 'var(--muted)', fontSize: 15, marginBottom: 4 }}>{modalItem.category}</div>
+                {Array.isArray(modalItem.category) && modalItem.category.length > 0 && (
+                  <div style={{ color: 'var(--muted)', fontSize: 15, marginBottom: 4 }}>{modalItem.category.join(', ')}</div>
+                )}
                 <div style={{ fontSize: 16, marginBottom: 8 }}>{modalItem.description}</div>
                 <div style={{ color: 'var(--muted)', fontSize: 14 }}>
-                  <b>Owner:</b> {modalItem.owner?.first_name} {modalItem.owner?.last_name} {modalItem.owner?.username && `(@${modalItem.owner.username})`}<br />
+                  <b>Owner:</b> {modalItem.owner?.first_name} {modalItem.owner?.last_name} {modalItem.owner?.username && `(${modalItem.owner.username})`}<br />
                   {modalItem.owner?.state && <><b>Location:</b> {modalItem.owner.state}<br /></>}
                   {modalItem.created_at && <><b>Posted:</b> {new Date(modalItem.created_at).toLocaleString()}<br /></>}
                   {modalItem.wants && <><b>Wants:</b> {modalItem.wants}<br /></>}
@@ -285,8 +318,7 @@ export default function Feed() {
             <div style={{ flex: 1, minWidth: 0, borderTopRightRadius: 18, borderBottomRightRadius: 18, background: 'var(--surface2)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '28px 28px 22px 28px', boxSizing: 'border-box', maxWidth: 340 }}>
               <div>
                 <div style={{ fontWeight: 800, fontSize: 20, marginBottom: 18, color: 'var(--accent)' }}>Make an Offer</div>
-                {/* Pass modalItem.id to OfferOptions via global for now */}
-                {modalItem && (window.__modalItemId = modalItem.id)}
+                {/* Pass modalItem.id to OfferOptions via global for now, but do not render the id */}
                 <OfferOptions />
               </div>
             </div>

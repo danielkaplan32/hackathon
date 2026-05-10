@@ -125,7 +125,7 @@ const MainApp = ({ openTradeModal }) => {
   // Add or update item or wishlist
   const handleSaveItem = async (itemData) => {
     if (!user) return;
-    const { title, description, category, photos, wants, type } = itemData;
+    const { title, value, description, category, photos, wants, type } = itemData;
     if (addType === 'wishlist') {
       // Add to wishlist (wishlists table)
       if (editItem) {
@@ -162,6 +162,7 @@ const MainApp = ({ openTradeModal }) => {
       if (editItem) {
         await supabase.from('items').update({
           title,
+          value,
           description,
           category,
           photos,
@@ -172,6 +173,7 @@ const MainApp = ({ openTradeModal }) => {
           {
             owner_id: user.id,
             title,
+            value,
             description,
             category,
             photos,
@@ -443,6 +445,10 @@ const MainApp = ({ openTradeModal }) => {
             transition: 'margin-left 0.2s',
             flexDirection: 'column',
             alignItems: 'center',
+            paddingLeft: window.innerWidth > 600 ? 32 : 8,
+            paddingRight: window.innerWidth > 600 ? 32 : 8,
+            maxWidth: 1200,
+            margin: '0 auto',
           }}
         >
           {activePanel === 'feed' && (
@@ -451,7 +457,7 @@ const MainApp = ({ openTradeModal }) => {
           {activePanel === 'items' && (
             <>
               <div style={{ width: '100%', flex: 1, alignSelf: 'stretch', padding: 0, display: 'flex', flexDirection: 'column', gap: 32 }}>
-                <div>
+                <div style={{ marginTop: 24 }}>
                   <Items
                     items={myItems}
                     onAddItem={handleAddItem}
@@ -488,6 +494,7 @@ const MainApp = ({ openTradeModal }) => {
                 onSave={handleSaveItem}
                 type={addType}
                 initialData={editItem}
+                wishlistOptions={myWishlist.map(w => w.title).filter(Boolean)}
               />
             </>
           )}
