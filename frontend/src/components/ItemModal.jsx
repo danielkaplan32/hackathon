@@ -201,28 +201,28 @@ const ItemModal = ({ open, onClose, onSave, type = 'item', initialData, wishlist
   const [isAutoTagging, setIsAutoTagging] = useState(false);
 
 
-  // Gemini Vision API for image+text tagging
+  // Gemini Vision API for image+text tagging (secure, via backend)
   async function geminiVisionTag({ base64Image, prompt }) {
-    const apiKey = "AIzaSyD1kRB6sJ8e8AI-u90DbBkZ5W3QVksEzTA";
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
-    const body = {
-      contents: [
-        {
-          parts: [
-            { inlineData: { mimeType: "image/png", data: base64Image } },
-            { text: prompt }
+    const res = await fetch('/api/gemini', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        endpoint: 'models/gemini-2.5-flash:generateContent',
+        body: {
+          contents: [
+            {
+              parts: [
+                { inlineData: { mimeType: 'image/png', data: base64Image } },
+                { text: prompt }
+              ]
+            }
           ]
         }
-      ]
-    };
-    const res = await fetch(url, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body)
+      })
     });
-    if (!res.ok) throw new Error("Gemini API error");
+    if (!res.ok) throw new Error('Gemini API error');
     const data = await res.json();
-    return data.candidates?.[0]?.content?.parts?.[0]?.text || "";
+    return data.candidates?.[0]?.content?.parts?.[0]?.text || '';
   }
 
   async function handleAutoTag() {
