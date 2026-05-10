@@ -1,3 +1,8 @@
+  // Sign out and redirect to Auth screen
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    window.location.reload(); // reload to show AuthScreen
+  };
 import React, { useState, useEffect } from 'react';
 import SwitcharooLogo from '../assets/switcharoo-icon.svg';
 import { useLocation } from 'react-router-dom';
@@ -378,6 +383,27 @@ const MainApp = ({ openTradeModal }) => {
               </button>
             ))}
             <div className="sidebar-spacer" style={{ flex: 1 }}></div>
+            {/* Sign Out button above avatar */}
+            <button
+              onClick={handleSignOut}
+              style={{
+                width: '100%',
+                background: 'none',
+                border: 'none',
+                color: 'var(--danger, #e74c3c)',
+                fontWeight: 600,
+                fontSize: 15,
+                padding: '12px 18px',
+                textAlign: 'left',
+                cursor: 'pointer',
+                borderTop: '1px solid var(--border)',
+                borderBottom: '1px solid var(--border)',
+                marginBottom: 0,
+              }}
+              aria-label="Sign out"
+            >
+              Sign Out
+            </button>
             <div
               className="sidebar-user"
               tabIndex={0}
